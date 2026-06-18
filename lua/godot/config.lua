@@ -20,7 +20,6 @@ M.defaults = {
   },
   treesitter = {
     auto_setup = true,
-    ensure_installed = { "gdscript" },
   },
   docs = {
     auto_setup = true,
