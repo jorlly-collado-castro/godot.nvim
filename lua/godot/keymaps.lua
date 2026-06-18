@@ -1,7 +1,6 @@
 local M = {}
 
 local registered = {}
-local group_registered = false
 
 local function find_godot_root(dir)
   for _ = 1, 10 do
@@ -38,30 +37,21 @@ local keymap_defs = {
   docs = { ":GodotDocs<CR>", "Docs for Symbol" },
 }
 
-local function clear_keymaps()
+local function clear_bindings()
   for _, lhs in ipairs(registered) do
     pcall(vim.keymap.del, "n", lhs)
   end
   registered = {}
-
-  if group_registered then
-    local wk_ok, wk = pcall(require, "which-key")
-    if wk_ok then
-      pcall(wk.del, "<leader>g", "group")
-    end
-    group_registered = false
-  end
 end
 
-local function register_keymaps(keys)
-  clear_keymaps()
-
+local function register_group()
   local wk_ok, wk = pcall(require, "which-key")
   if wk_ok then
     wk.add({ { "<leader>g", group = "Godot" } })
-    group_registered = true
   end
+end
 
+local function register_bindings(keys)
   for name, def in pairs(keymap_defs) do
     local lhs = keys[name]
     if lhs then
@@ -76,11 +66,13 @@ function M.setup()
   local config = require("godot.config").get()
   local keys = vim.tbl_deep_extend("force", vim.deepcopy(defaults), config.keys or {})
 
+  register_group()
+
   local function refresh()
     if find_godot_root(vim.fn.getcwd()) then
-      register_keymaps(keys)
+      register_bindings(keys)
     else
-      clear_keymaps()
+      clear_bindings()
     end
   end
 
