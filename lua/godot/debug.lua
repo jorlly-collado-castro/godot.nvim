@@ -9,6 +9,13 @@ local function port_open(host, port)
   return false
 end
 
+local function parse_url(url)
+  local host, port = url:match("([^:/]+):(%d+)$")
+  host = host or "127.0.0.1"
+  port = tonumber(port) or 6006
+  return host, port
+end
+
 local function configure_dap(adapter_opts)
   local ok, dap = pcall(require, "dap")
   if not ok then return end
@@ -68,10 +75,10 @@ function M.setup()
   })
 
   vim.api.nvim_create_user_command("GodotDebugStart", function()
-    local addr = debug_opts.adapter.connect
-    if not port_open(addr.host, addr.port) then
+    local _, port = parse_url(debug_opts.adapter.connect)
+    if not port_open("127.0.0.1", port) then
       vim.notify(
-        "[godot.nvim] Godot not reachable on " .. addr.host .. ":" .. addr.port
+        "[godot.nvim] Godot not reachable on port " .. port
           .. ". Start Godot with --remote-debug or press rd to auto-launch.",
         vim.log.levels.ERROR
       )
@@ -96,8 +103,7 @@ end
 --- Starts Godot with remote-debug enabled and connects DAP
 function M.run_debug()
   local config = require("godot.config").get()
-  local addr = config.debug.adapter.connect
-  local host, port = addr.host, addr.port
+  local host, port = parse_url(config.debug.adapter.connect)
 
   -- Launch Godot in debug mode
   require("godot.runner").run_project({ "--remote-debug", host .. ":" .. port })

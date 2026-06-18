@@ -11,6 +11,7 @@ M.defaults = {
     debug_stop = "<leader>rT",
     debug_restart = "<leader>rx",
     run_debug = "<leader>rd",
+    open = "<leader>ro",
     docs = "<leader>rH",
   },
   pipe = {
@@ -45,7 +46,7 @@ M.defaults = {
     auto_setup = true,
     adapter = {
       type = "server",
-      connect = { host = "127.0.0.1", port = 6006 },
+      connect = "tcp://127.0.0.1:6006",
     },
     keymaps = {
       toggle_breakpoint = "<leader>db",

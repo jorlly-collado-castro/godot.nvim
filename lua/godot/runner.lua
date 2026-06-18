@@ -89,11 +89,10 @@ function M.export_project(preset_name)
 
   last_export_preset = preset_name
 
-  local date_dir = os.date("%Y-%m-%d")
   local output_dir = export_opts.output_dir
 
   if export_opts.timestamp then
-    output_dir = output_dir .. "/" .. date_dir
+    output_dir = output_dir .. "/build_" .. os.date("%Y-%m-%d_%H%M%S")
   end
 
   output_dir = output_dir .. "/" .. preset_name
@@ -121,6 +120,30 @@ function M.export_project(preset_name)
   })
 end
 
+function M.open_project()
+  local config = require("godot.config").get()
+  local cmd = config.runner.command
+  local full_cmd = { cmd, "--path", project_root() }
+
+  if config.runner.open_terminal then
+    local snack_ok, snacks = pcall(require, "snacks")
+    if snack_ok then
+      snacks.terminal(full_cmd, { position = "float" })
+    else
+      vim.fn.termopen(full_cmd, {})
+    end
+  else
+    vim.fn.jobstart(full_cmd, {
+      detach = true,
+      on_exit = function(_, code)
+        if code ~= 0 then
+          vim.notify("[godot.nvim] Godot exited with code " .. code, vim.log.levels.WARN)
+        end
+      end,
+    })
+  end
+end
+
 function M.setup()
   local config = require("godot.config").get()
   if not config.runner.auto_setup then return end
@@ -128,6 +151,10 @@ function M.setup()
   vim.api.nvim_create_user_command("GodotRun", function()
     M.run_project()
   end, { desc = "Run the Godot project" })
+
+  vim.api.nvim_create_user_command("GodotOpen", function()
+    M.open_project()
+  end, { desc = "Open project in Godot editor" })
 
   vim.api.nvim_create_user_command("GodotRunCurrent", function()
     M.run_current_scene()

@@ -23,6 +23,7 @@ local defaults = {
   debug_stop = "<leader>rT",
   debug_restart = "<leader>rx",
   run_debug = "<leader>rd",
+  open = "<leader>ro",
   docs = "<leader>rH",
 }
 
@@ -36,6 +37,7 @@ local keymap_defs = {
   debug_stop = { ":GodotDebugStop<CR>", "Debug Stop" },
   debug_restart = { ":GodotDebugRestart<CR>", "Debug Restart" },
   run_debug = { ":GodotRunDebug<CR>", "Run with Debug" },
+  open = { ":GodotOpen<CR>", "Open in Editor" },
   docs = { ":GodotDocs<CR>", "Docs for Symbol" },
 }
 

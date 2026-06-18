@@ -169,8 +169,7 @@ assert_eq(config.get().keys.docs, "<leader>rH", "default key for docs")
 
 -- Adapter uses modern connect format
 assert_eq(config.get().debug.adapter.type, "server", "adapter type")
-assert_eq(config.get().debug.adapter.connect.host, "127.0.0.1", "adapter host")
-assert_eq(config.get().debug.adapter.connect.port, 6006, "adapter port")
+assert_eq(config.get().debug.adapter.connect, "tcp://127.0.0.1:6006", "adapter connect url")
 
 print("[godot.nvim] all tests passed")
 os.exit(0)
