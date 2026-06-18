@@ -1,5 +1,14 @@
 local M = {}
 
+local function port_open(host, port)
+  local ok, chan = pcall(vim.fn.sockconnect, "tcp", host .. ":" .. port, { mode = "raw" })
+  if ok and chan > -1 then
+    vim.fn.chanclose(chan)
+    return true
+  end
+  return false
+end
+
 local function configure_dap(adapter_opts)
   local ok, dap = pcall(require, "dap")
   if not ok then return end
@@ -21,6 +30,14 @@ local function configure_dap(adapter_opts)
       project = "${workspaceFolder}",
     },
   }
+end
+
+local function require_dap()
+  local ok, dap = pcall(require, "dap")
+  if not ok then
+    vim.notify("[godot.nvim] nvim-dap not found", vim.log.levels.ERROR)
+  end
+  return ok, dap
 end
 
 function M.setup()
@@ -51,6 +68,15 @@ function M.setup()
   })
 
   vim.api.nvim_create_user_command("GodotDebugStart", function()
+    local addr = debug_opts.adapter.connect
+    if not port_open(addr.host, addr.port) then
+      vim.notify(
+        "[godot.nvim] Godot not reachable on " .. addr.host .. ":" .. addr.port
+          .. ". Start Godot with --remote-debug or press rd to auto-launch.",
+        vim.log.levels.ERROR
+      )
+      return
+    end
     dap.continue()
   end, { desc = "Start DAP debugging session" })
 
@@ -61,6 +87,39 @@ function M.setup()
   vim.api.nvim_create_user_command("GodotDebugRestart", function()
     dap.restart()
   end, { desc = "Restart debugging" })
+
+  vim.api.nvim_create_user_command("GodotRunDebug", function()
+    M.run_debug()
+  end, { desc = "Run project with DAP debugging" })
+end
+
+--- Starts Godot with remote-debug enabled and connects DAP
+function M.run_debug()
+  local config = require("godot.config").get()
+  local addr = config.debug.adapter.connect
+  local host, port = addr.host, addr.port
+
+  -- Launch Godot in debug mode
+  require("godot.runner").run_project({ "--remote-debug", host .. ":" .. port })
+
+  -- Poll for the debug port to become available (up to 15s)
+  local elapsed = 0
+  local timer = vim.uv.new_timer()
+  timer:start(500, 500, vim.schedule_wrap(function()
+    if port_open(host, port) then
+      timer:stop()
+      timer:close()
+      local ok, dap = require_dap()
+      if ok then dap.continue() end
+      return
+    end
+    elapsed = elapsed + 500
+    if elapsed >= 15000 then
+      timer:stop()
+      timer:close()
+      vim.notify("[godot.nvim] Timed out waiting for Godot debugger on " .. host .. ":" .. port, vim.log.levels.ERROR)
+    end
+  end))
 end
 
 return M

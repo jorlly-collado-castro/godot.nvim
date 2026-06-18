@@ -164,7 +164,13 @@ assert_eq(map_lhs, "", "keymaps should not register outside Godot project")
 -- Config defaults for keys
 assert_eq(config.get().keys.run, "<leader>ra", "default key for run")
 assert_eq(config.get().keys.debug_start, "<leader>rt", "default key for debug_start")
+assert_eq(config.get().keys.run_debug, "<leader>rd", "default key for run_debug")
 assert_eq(config.get().keys.docs, "<leader>rH", "default key for docs")
+
+-- Adapter uses modern connect format
+assert_eq(config.get().debug.adapter.type, "server", "adapter type")
+assert_eq(config.get().debug.adapter.connect.host, "127.0.0.1", "adapter host")
+assert_eq(config.get().debug.adapter.connect.port, 6006, "adapter port")
 
 print("[godot.nvim] all tests passed")
 os.exit(0)

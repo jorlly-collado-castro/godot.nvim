@@ -34,8 +34,7 @@ function M.run_project(args)
     local term_opts = vim.deepcopy(config.runner.terminal)
     local snack_ok, snacks = pcall(require, "snacks")
     if snack_ok then
-      term_opts.cmd = full_cmd
-      snacks.terminal(term_opts)
+      snacks.terminal(full_cmd, { position = term_opts.direction or "float" })
     else
       vim.fn.termopen(full_cmd, term_opts)
     end
@@ -99,14 +98,16 @@ function M.export_project(preset_name)
 
   output_dir = output_dir .. "/" .. preset_name
 
+  vim.fn.mkdir(output_dir, "p")
+
   local full_cmd = {
     "godot",
+    "--path",
+    project_root(),
     "--headless",
     "--export-release",
     preset_id,
     output_dir .. "/game",
-    "--path",
-    project_root(),
   }
 
   vim.fn.jobstart(full_cmd, {
