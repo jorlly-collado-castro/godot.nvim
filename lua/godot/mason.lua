@@ -1,20 +1,18 @@
 local M = {}
 
-local function install_missing_packages(packages)
+local function install_missing(packages)
   local registry_ok, registry = pcall(require, "mason-registry")
   if not registry_ok then
     vim.defer_fn(function()
-      install_missing_packages(packages)
+      install_missing(packages)
     end, 500)
     return
   end
 
   for _, name in ipairs(packages) do
     if not registry.is_installed(name) then
-      local ok, pkg = pcall(registry.get_package, name)
-      if ok and pkg then
-        vim.notify(string.format("[godot.nvim] Installing %s via Mason...", name), vim.log.levels.INFO)
-        pkg:install()
+      if registry.has_package(name) then
+        registry.get_package(name):install()
       end
     end
   end
@@ -24,28 +22,17 @@ function M.setup()
   local config = require("godot.config").get()
   if not config.mason.auto_setup then return end
 
-  local mason_ok, mason = pcall(require, "mason")
-  if not mason_ok then
+  local ok, mason = pcall(require, "mason")
+  if not ok then
     vim.notify("[godot.nvim] mason.nvim not found – skipping tool installation", vim.log.levels.DEBUG)
     return
   end
 
-  local mason_was_setup = mason.settings ~= nil
+  mason.setup {}
 
-  if mason_was_setup then
-    mason.settings.ensure_installed = mason.settings.ensure_installed or {}
-    vim.list_extend(mason.settings.ensure_installed, config.mason.packages)
-  end
-
-  mason.setup({
-    ensure_installed = vim.list_extend({}, config.mason.packages),
-  })
-
-  if mason_was_setup then
-    vim.defer_fn(function()
-      install_missing_packages(config.mason.packages)
-    end, 500)
-  end
+  vim.defer_fn(function()
+    install_missing(config.mason.packages)
+  end, 500)
 end
 
 return M
