@@ -4,21 +4,29 @@ A comprehensive Neovim plugin for Godot engine development.
 
 ## Features
 
-| Feature | Module | Status | Description |
-| ------- | ------ | ------ | ----------- |
-| Synchronized external editor | `pipe` | **complete** | Pipe server connects Godot to running Neovim with running‑server guard. |
-| LSP integration | `lsp` | **complete** | GDScript language server (`gdlsp`) via nvim-lspconfig. |
-| Treesitter support | `treesitter` | **complete** | GDScript syntax highlighting via nvim-treesitter. |
-| Mason tooling | `mason` | **complete** | Auto-installs `gdscript-formatter` and `gdtoolkit`. |
-| Launch project | `runner` | **complete** | `GodotRun`, `GodotRunCurrent` commands. |
-| Package / export | `runner` | **complete** | `GodotExport` with preset picker, timestamped directories, and platform subdirs. |
-| DAP debugger | `debug` | **complete** | nvim-dap adapter for Godot remote debugger with working keymaps (`<leader>db`, `dc`, `do`, `di`, `du`). |
-| Debugger commands | `debug` | **complete** | `GodotDebugStart/Stop/Restart`, merged into `debug` module. |
-| Snacks integration | `snacks` | **complete** | Auto‑hides `.uid` and `server.pipe` from file explorer. |
-| Godot documentation | `docs` | **partial** | Delegates to `gdscript-extended-lsp` if installed; fallback opens browser. |
-| Profiler integration | — | **none** | Not implemented. |
+| Feature                      | Module       | Status       | Description                                                                                             |
+| ---------------------------- | ------------ | ------------ | ------------------------------------------------------------------------------------------------------- |
+| Synchronized external editor | `pipe`       | **complete** | Pipe server connects Godot to running Neovim with running‑server guard.                                 |
+| LSP integration              | `lsp`        | **complete** | GDScript language server (`gdlsp`) via nvim-lspconfig.                                                  |
+| Treesitter support           | `treesitter` | **complete** | GDScript syntax highlighting via nvim-treesitter.                                                       |
+| Mason tooling                | `mason`      | **complete** | Auto-installs `gdscript-formatter` and `gdtoolkit`.                                                     |
+| Launch project               | `runner`     | **complete** | `GodotRun`, `GodotRunCurrent` commands.                                                                 |
+| Package / export             | `runner`     | **complete** | `GodotExport` with preset picker, timestamped directories, and platform subdirs.                        |
+| DAP debugger                 | `debug`      | **complete** | nvim-dap adapter for Godot remote debugger with working keymaps (`<leader>db`, `dc`, `do`, `di`, `du`). |
+| Debugger commands            | `debug`      | **complete** | `GodotDebugStart/Stop/Restart`, merged into `debug` module.                                             |
+| Snacks integration           | `snacks`     | **complete** | Auto‑hides `.uid` and `server.pipe` from file explorer.                                                 |
+| Godot documentation          | `docs`       | **partial**  | Delegates to `gdscript-extended-lsp` if installed; fallback opens browser.                              |
+| Profiler integration         | —            | **none**     | Not implemented.                                                                                        |
 
 ## Installation
+
+### setup godot external editor
+
+```
+Text Editor > External > Exec Path = /opt/homebrew/bin/nvim (or your nvim install)
+Text Editor > External > Exec Flags = --server {project}/server.pipe --remote-send "<C-\><C-N>:e {file}<CR>:call cursor({line}+1,{col})<CR>"
+Text Editor > External > Use External Edit = True
+```
 
 ### lazy.nvim
 
@@ -117,17 +125,17 @@ require('godot').setup({
 
 ## Commands
 
-| Command              | Description                                     |
-| -------------------- | ----------------------------------------------- |
-| `GodotRun`           | Run the Godot project in the current directory. |
-| `GodotRunCurrent`    | Run the current `.tscn` scene.                  |
-| `GodotBuild`         | Build the project (`godot --build`).            |
-| `GodotExport`        | Export project with preset picker or by name.   |
-| `GodotExportLast`    | Re-run the last export.                         |
-| `GodotDebugStart`    | Start a DAP debugging session.                  |
-| `GodotDebugStop`     | Stop debugging.                                 |
-| `GodotDebugRestart`  | Restart debugging.                              |
-| `GodotDocs`          | Open Godot docs for symbol under cursor.        |
+| Command             | Description                                     |
+| ------------------- | ----------------------------------------------- |
+| `GodotRun`          | Run the Godot project in the current directory. |
+| `GodotRunCurrent`   | Run the current `.tscn` scene.                  |
+| `GodotBuild`        | Build the project (`godot --build`).            |
+| `GodotExport`       | Export project with preset picker or by name.   |
+| `GodotExportLast`   | Re-run the last export.                         |
+| `GodotDebugStart`   | Start a DAP debugging session.                  |
+| `GodotDebugStop`    | Stop debugging.                                 |
+| `GodotDebugRestart` | Restart debugging.                              |
+| `GodotDocs`         | Open Godot docs for symbol under cursor.        |
 
 ## Project Structure
 
@@ -163,4 +171,4 @@ make test    # Run headless tests
 
 ## License
 
-MIT © 2026
+GPLv3 © 2026
