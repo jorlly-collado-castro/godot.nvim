@@ -1,11 +1,5 @@
 local M = {}
 
-local function has_builtin_server(lspconfig, name)
-  return pcall(function()
-    return lspconfig[name] ~= nil
-  end)
-end
-
 local function setup_server(opts)
   local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
   if not lspconfig_ok then
@@ -15,6 +9,14 @@ local function setup_server(opts)
 
   local util_ok, util = pcall(require, "lspconfig.util")
   if not util_ok then return end
+
+  if vim.fn.executable("gdlsp") == 0 then
+    vim.notify(
+      "[godot.nvim] `gdlsp` not found on PATH – LSP disabled. Install with `:MasonInstall gdtoolkit`",
+      vim.log.levels.INFO
+    )
+    return
+  end
 
   local configs_ok, configs = pcall(require, "lspconfig.configs")
   if not configs_ok then return end
