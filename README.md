@@ -9,7 +9,7 @@ A comprehensive Neovim plugin for Godot engine development.
 | Synchronized external editor | `pipe`       | **complete** | none                                                                     | Pipe server connects Godot to running Neovim with running‑server guard.                                 |
 | LSP integration              | `lsp`        | **complete** | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)               | GDScript language server (`gdlsp`) via nvim-lspconfig.                                                  |
 | Treesitter support           | `treesitter` | **complete** | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)    | GDScript syntax highlighting via `TSInstallSync gdscript`.                                              |
-| Mason tooling                | `mason`      | **complete** | [mason.nvim](https://github.com/williamboman/mason.nvim)                | Auto-installs `gdscript-formatter` and `gdtoolkit`.                                                     |
+| Mason tooling                | `mason`      | **complete** | [mason.nvim](https://github.com/mason-org/mason.nvim)                   | Auto-installs `gdscript-formatter` and `gdtoolkit` (provides `gdlsp`).                                  |
 | Launch project               | `runner`     | **complete** | none                                                                     | `GodotRun`, `GodotRunCurrent` commands.                                                                 |
 | Package / export             | `runner`     | **complete** | none                                                                     | `GodotExport` with preset picker, timestamped directories, and platform subdirs.                        |
 | DAP debugger                 | `debug`      | **complete** | [nvim-dap](https://github.com/mfussenegger/nvim-dap)                    | nvim-dap adapter for Godot remote debugger with working keymaps (`<leader>db`, `dc`, `do`, `di`, `du`). |
@@ -35,7 +35,7 @@ Text Editor > External > Use External Edit = True
   "<YOUR_GITHUB_USER>/godot.nvim",
   lazy = false,
   dependencies = {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     "neovim/nvim-lspconfig",
     "nvim-treesitter/nvim-treesitter",
     "mfussenegger/nvim-dap",
@@ -163,7 +163,7 @@ lua/godot/
 ## Requirements
 
 - Neovim >= 0.9
-- Optional: [mason.nvim](https://github.com/williamboman/mason.nvim)
+- Optional: [mason.nvim](https://github.com/mason-org/mason.nvim)
 - Optional: [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 - Optional: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - Optional: [nvim-dap](https://github.com/mfussenegger/nvim-dap)
