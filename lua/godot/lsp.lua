@@ -1,30 +1,49 @@
 local M = {}
 
-local function get_lspconfig()
-  local ok, lspconfig = pcall(require, "lspconfig")
-  if not ok then return nil end
-  return lspconfig
+local function has_builtin_server(lspconfig, name)
+  return pcall(function()
+    return lspconfig[name] ~= nil
+  end)
 end
 
-local function register_custom_server(lspconfig)
-  if lspconfig.configs.gdtoolkit then return end
+local function setup_server(opts)
+  local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
+  if not lspconfig_ok then
+    vim.notify("[godot.nvim] nvim-lspconfig not found – skipping LSP setup", vim.log.levels.DEBUG)
+    return
+  end
 
-  lspconfig.configs.gdtoolkit = {
-    default_config = {
-      cmd = { "gdlsp" },
-      filetypes = { "gdscript" },
-      root_dir = lspconfig.util.root_pattern("project.godot"),
-      settings = {},
-    },
-    docs = {
-      description = [[
+  local util_ok, util = pcall(require, "lspconfig.util")
+  if not util_ok then return end
+
+  local configs_ok, configs = pcall(require, "lspconfig.configs")
+  if not configs_ok then return end
+
+  if not configs.gdtoolkit then
+    configs.gdtoolkit = {
+      default_config = {
+        cmd = { "gdlsp" },
+        filetypes = { "gdscript" },
+        root_dir = util.root_pattern("project.godot"),
+        settings = {},
+      },
+      docs = {
+        description = [[
 https://github.com/godotengine/godot
 
 The GDScript language server provided by the gdtoolkit package.
 Install via mason: `:MasonInstall gdtoolkit`
 ]],
-    },
-  }
+      },
+    }
+  end
+
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "gdscript",
+    callback = function()
+      lspconfig.gdtoolkit.setup(opts)
+    end,
+  })
 end
 
 function M.setup()
@@ -32,20 +51,7 @@ function M.setup()
   local lsp_opts = config.lsp
   if not lsp_opts.auto_setup then return end
 
-  local lspconfig = get_lspconfig()
-  if not lspconfig then
-    vim.notify("[godot.nvim] nvim-lspconfig not found – skipping LSP setup", vim.log.levels.DEBUG)
-    return
-  end
-
-  register_custom_server(lspconfig)
-
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = "gdscript",
-    callback = function()
-      lspconfig.gdtoolkit.setup(lsp_opts.gdtoolkit)
-    end,
-  })
+  setup_server(lsp_opts.gdtoolkit)
 
   vim.api.nvim_create_autocmd("BufReadPost", {
     pattern = "*/project.godot",
