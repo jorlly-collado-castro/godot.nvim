@@ -162,9 +162,9 @@ local map_lhs = vim.fn.maparg(config.get().keys.run, "n")
 assert_eq(map_lhs, "", "keymaps should not register outside Godot project")
 
 -- Config defaults for keys
-assert_eq(config.get().keys.run, "<leader>ga", "default key for run")
-assert_eq(config.get().keys.debug_start, "<leader>gt", "default key for debug_start")
-assert_eq(config.get().keys.docs, "<leader>gH", "default key for docs")
+assert_eq(config.get().keys.run, "<leader>ra", "default key for run")
+assert_eq(config.get().keys.debug_start, "<leader>rt", "default key for debug_start")
+assert_eq(config.get().keys.docs, "<leader>rH", "default key for docs")
 
 print("[godot.nvim] all tests passed")
 os.exit(0)

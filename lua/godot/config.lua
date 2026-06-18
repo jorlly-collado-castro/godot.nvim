@@ -2,15 +2,15 @@ local M = {}
 
 M.defaults = {
   keys = {
-    run = "<leader>ga",
-    run_current = "<leader>gA",
-    build = "<leader>gm",
-    export = "<leader>gE",
-    export_last = "<leader>gq",
-    debug_start = "<leader>gt",
-    debug_stop = "<leader>gT",
-    debug_restart = "<leader>gx",
-    docs = "<leader>gH",
+    run = "<leader>ra",
+    run_current = "<leader>rA",
+    build = "<leader>rm",
+    export = "<leader>rE",
+    export_last = "<leader>rq",
+    debug_start = "<leader>rt",
+    debug_stop = "<leader>rT",
+    debug_restart = "<leader>rx",
+    docs = "<leader>rH",
   },
   pipe = {
     path = "./server.pipe",

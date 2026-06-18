@@ -14,15 +14,15 @@ local function find_godot_root(dir)
 end
 
 local defaults = {
-  run = "<leader>ga",
-  run_current = "<leader>gA",
-  build = "<leader>gm",
-  export = "<leader>gE",
-  export_last = "<leader>gq",
-  debug_start = "<leader>gt",
-  debug_stop = "<leader>gT",
-  debug_restart = "<leader>gx",
-  docs = "<leader>gH",
+  run = "<leader>ra",
+  run_current = "<leader>rA",
+  build = "<leader>rm",
+  export = "<leader>rE",
+  export_last = "<leader>rq",
+  debug_start = "<leader>rt",
+  debug_stop = "<leader>rT",
+  debug_restart = "<leader>rx",
+  docs = "<leader>rH",
 }
 
 local keymap_defs = {
@@ -47,7 +47,7 @@ end
 local function register_group()
   local wk_ok, wk = pcall(require, "which-key")
   if wk_ok then
-    wk.add({ { "<leader>g", group = "Godot" } })
+    wk.add({ "<leader>r", group = "Godot", icon = "\u{e65f}" })
   end
 end
 
