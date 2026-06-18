@@ -1,0 +1,101 @@
+*godot.txt*    Plugin for Godot engine integration
+
+==============================================================================
+INTRODUCTION                            *godot-introduction*
+
+godot.nvim is a comprehensive Neovim plugin for Godot engine development. It
+integrates LSP, debugging, project exporting, documentation lookup, and the
+Godot external editor pipe server.
+
+==============================================================================
+INSTALLATION                            *godot-installation*
+
+With lazy.nvim:
+>
+  { "<YOUR_GITHUB_USER>/godot.nvim", lazy = false }
+<
+
+With packer.nvim:
+>
+  use { "<YOUR_GITHUB_USER>/godot.nvim" }
+<
+
+==============================================================================
+SETUP                                    *godot-setup*
+
+Call setup with optional overrides. See the README for the full list of
+default options.
+>
+  require('godot').setup({})
+<
+
+==============================================================================
+MODULES                                 *godot-modules*
+
+pipe                                    *godot-pipe*
+    Starts a Neovim server bound to a named pipe when a `project.godot`
+    file is detected. Skips startup if the pipe already exists.
+
+mason                                   *godot-mason*
+    Integrates with mason.nvim to install gdscript-formatter and gdtoolkit.
+
+lsp                                     *godot-lsp*
+    Configures nvim-lspconfig to start `gdlsp` for `.gd` files.
+
+treesitter                              *godot-treesitter*
+    Ensures the gdscript parser is installed via nvim-treesitter.
+
+runner                                  *godot-runner*
+    Run the project (`GodotRun`), current scene (`GodotRunCurrent`), or
+    build (`GodotBuild`). Export with preset picker and timestamped
+    directories (`GodotExport`, `GodotExportLast`).
+
+debug                                   *godot-debug*
+    Merged DAP adapter + debugger module. Configures nvim-dap for the
+    Godot remote debugger at localhost:6006. Provides keymaps for
+    toggle_breakpoint, continue, step_over, step_into, step_out.
+    Commands: GodotDebugStart, GodotDebugStop, GodotDebugRestart.
+
+docs                                    *godot-docs*
+    Godot documentation lookup. Delegates to gdscript-extended-lsp if
+    installed; otherwise opens the class reference in the browser via
+    `GodotDocs`.
+
+snacks                                  *godot-snacks*
+    Configures snacks.nvim to exclude `*.uid` and `server.pipe` from
+    the file explorer.
+
+==============================================================================
+COMMANDS                                *godot-commands*
+
+                                                *GodotRun*
+GodotRun        Run the Godot project in the current directory.
+
+                                                *GodotRunCurrent*
+GodotRunCurrent  Run the current .tscn scene.
+
+                                                *GodotBuild*
+GodotBuild      Build the project (godot --build).
+
+                                                *GodotExport*
+GodotExport     Export project with preset picker, or by name.
+
+                                                *GodotExportLast*
+GodotExportLast  Re-run the last export.
+
+                                                *GodotDebugStart*
+GodotDebugStart  Start a DAP debugging session.
+
+                                                *GodotDebugStop*
+GodotDebugStop   Stop debugging.
+
+                                                *GodotDebugRestart*
+GodotDebugRestart Restart debugging.
+
+                                                *GodotDocs*
+GodotDocs       Open Godot docs for symbol under cursor.
+
+==============================================================================
+AUTHOR
+
+MIT License. See |LICENSE| for details.
