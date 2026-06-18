@@ -2,19 +2,16 @@ local M = {}
 
 function M.setup()
   local config = require("godot.config").get()
-  local ts_opts = config.treesitter
-  if not ts_opts.auto_setup then return end
+  if not config.treesitter.auto_setup then return end
 
-  local ok, treesitter = pcall(require, "nvim-treesitter.configs")
-  if not ok then
-    vim.notify("[godot.nvim] nvim-treesitter not found – skipping treesitter setup", vim.log.levels.DEBUG)
-    return
-  end
+  vim.defer_fn(function()
+    local has_parser = pcall(vim.treesitter.query.parse, "gdscript", "(node) @capture")
+    if has_parser then return end
 
-  treesitter.setup({
-    ensure_installed = ts_opts.ensure_installed,
-    highlight = { enable = true },
-  })
+    if vim.fn.exists(":TSInstallSync") == 2 then
+      vim.cmd("TSInstallSync gdscript")
+    end
+  end, 200)
 end
 
 return M
