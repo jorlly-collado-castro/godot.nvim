@@ -30,7 +30,9 @@ function M.setup()
     return
   end
 
-  if mason.settings then
+  local mason_was_setup = mason.settings ~= nil
+
+  if mason_was_setup then
     mason.settings.ensure_installed = mason.settings.ensure_installed or {}
     vim.list_extend(mason.settings.ensure_installed, config.mason.packages)
   end
@@ -39,9 +41,11 @@ function M.setup()
     ensure_installed = vim.list_extend({}, config.mason.packages),
   })
 
-  vim.defer_fn(function()
-    install_missing_packages(config.mason.packages)
-  end, 500)
+  if mason_was_setup then
+    vim.defer_fn(function()
+      install_missing_packages(config.mason.packages)
+    end, 500)
+  end
 end
 
 return M
