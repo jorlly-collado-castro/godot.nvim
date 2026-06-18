@@ -4,19 +4,19 @@ A comprehensive Neovim plugin for Godot engine development.
 
 ## Features
 
-| Feature                      | Module       | Status       | Description                                                                                             |
-| ---------------------------- | ------------ | ------------ | ------------------------------------------------------------------------------------------------------- |
-| Synchronized external editor | `pipe`       | **complete** | Pipe server connects Godot to running Neovim with running‑server guard.                                 |
-| LSP integration              | `lsp`        | **complete** | GDScript language server (`gdlsp`) via nvim-lspconfig.                                                  |
-| Treesitter support           | `treesitter` | **complete** | GDScript syntax highlighting via nvim-treesitter.                                                       |
-| Mason tooling                | `mason`      | **complete** | Auto-installs `gdscript-formatter` and `gdtoolkit`.                                                     |
-| Launch project               | `runner`     | **complete** | `GodotRun`, `GodotRunCurrent` commands.                                                                 |
-| Package / export             | `runner`     | **complete** | `GodotExport` with preset picker, timestamped directories, and platform subdirs.                        |
-| DAP debugger                 | `debug`      | **complete** | nvim-dap adapter for Godot remote debugger with working keymaps (`<leader>db`, `dc`, `do`, `di`, `du`). |
-| Debugger commands            | `debug`      | **complete** | `GodotDebugStart/Stop/Restart`, merged into `debug` module.                                             |
-| Snacks integration           | `snacks`     | **complete** | Auto‑hides `.uid` and `server.pipe` from file explorer.                                                 |
-| Godot documentation          | `docs`       | **partial**  | Delegates to `gdscript-extended-lsp` if installed; fallback opens browser.                              |
-| Profiler integration         | —            | **none**     | Not implemented.                                                                                        |
+| Feature                      | Module       | Status       | Requires                                                                 | Description                                                                                             |
+| ---------------------------- | ------------ | ------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Synchronized external editor | `pipe`       | **complete** | none                                                                     | Pipe server connects Godot to running Neovim with running‑server guard.                                 |
+| LSP integration              | `lsp`        | **complete** | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)               | GDScript language server (`gdlsp`) via nvim-lspconfig.                                                  |
+| Treesitter support           | `treesitter` | **complete** | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)    | GDScript syntax highlighting via `TSInstallSync gdscript`.                                              |
+| Mason tooling                | `mason`      | **complete** | [mason.nvim](https://github.com/williamboman/mason.nvim)                | Auto-installs `gdscript-formatter` and `gdtoolkit`.                                                     |
+| Launch project               | `runner`     | **complete** | none                                                                     | `GodotRun`, `GodotRunCurrent` commands.                                                                 |
+| Package / export             | `runner`     | **complete** | none                                                                     | `GodotExport` with preset picker, timestamped directories, and platform subdirs.                        |
+| DAP debugger                 | `debug`      | **complete** | [nvim-dap](https://github.com/mfussenegger/nvim-dap)                    | nvim-dap adapter for Godot remote debugger with working keymaps (`<leader>db`, `dc`, `do`, `di`, `du`). |
+| Debugger commands            | `debug`      | **complete** | (same as DAP)                                                            | `GodotDebugStart/Stop/Restart`, merged into `debug` module.                                             |
+| Snacks integration           | `snacks`     | **complete** | [snacks.nvim](https://github.com/folke/snacks.nvim)                     | Auto‑hides `.uid` and `server.pipe` from file explorer.                                                 |
+| Godot documentation          | `docs`       | **partial**  | [gdscript-extended-lsp.nvim](https://github.com/teatek/gdscript-extended-lsp.nvim) (optional) | Delegates to `gdscript-extended-lsp` if installed; fallback opens browser.                              |
+| Profiler integration         | —            | **none**     | —                                                                        | Not implemented.                                                                                        |
 
 ## Installation
 
@@ -34,6 +34,14 @@ Text Editor > External > Use External Edit = True
 {
   "<YOUR_GITHUB_USER>/godot.nvim",
   lazy = false,
+  dependencies = {
+    "williamboman/mason.nvim",
+    "neovim/nvim-lspconfig",
+    "nvim-treesitter/nvim-treesitter",
+    "mfussenegger/nvim-dap",
+    "folke/snacks.nvim",
+    -- Optional: "teatek/gdscript-extended-lsp.nvim",
+  },
   opts = {
     pipe = { path = "./server.pipe" },
     mason = { auto_setup = true },
@@ -78,7 +86,6 @@ require('godot').setup({
   },
   treesitter = {
     auto_setup = true,
-    ensure_installed = { "gdscript" },
   },
   debug = {
     auto_setup = true,
@@ -160,6 +167,8 @@ lua/godot/
 - Optional: [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 - Optional: [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - Optional: [nvim-dap](https://github.com/mfussenegger/nvim-dap)
+- Optional: [snacks.nvim](https://github.com/folke/snacks.nvim)
+- Optional: [gdscript-extended-lsp.nvim](https://github.com/teatek/gdscript-extended-lsp.nvim)
 
 ## Development
 

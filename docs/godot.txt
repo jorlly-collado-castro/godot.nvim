@@ -43,7 +43,8 @@ lsp                                     *godot-lsp*
     Configures nvim-lspconfig to start `gdlsp` for `.gd` files.
 
 treesitter                              *godot-treesitter*
-    Ensures the gdscript parser is installed via nvim-treesitter.
+    Ensures the gdscript parser is installed via Neovim's built-in
+    `vim.treesitter` API. Deferred to avoid lazy-load conflicts.
 
 runner                                  *godot-runner*
     Run the project (`GodotRun`), current scene (`GodotRunCurrent`), or
