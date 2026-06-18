@@ -14,9 +14,9 @@ M.defaults = {
   },
   lsp = {
     auto_setup = true,
-    gdtoolkit = {
-      cmd = { "gdlsp" },
-    },
+    gdscript_port = 6005,
+    gdscript = {},
+    gdshader = {},
   },
   treesitter = {
     auto_setup = true,
