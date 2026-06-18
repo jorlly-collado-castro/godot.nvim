@@ -67,9 +67,8 @@ M.defaults = {
     },
     export = {
       presets = {
-        linux = "Linux/X11",
+        linux = "Linux",
         windows = "Windows Desktop",
-        mac = "macOS",
         web = "Web",
       },
       output_dir = "build",

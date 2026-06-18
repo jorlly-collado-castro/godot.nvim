@@ -59,20 +59,51 @@ function M.run_current_scene()
   M.run_project({ scene })
 end
 
-local function pick_preset(callback)
+local function read_export_presets()
+  local filepath = project_root() .. "/export_presets.cfg"
+  if vim.fn.filereadable(filepath) ~= 1 then return nil end
+
+  local lines = vim.fn.readfile(filepath)
+  local presets = {}
+  local in_preset = false
+
+  for _, line in ipairs(lines) do
+    if line:match("^%[preset%.%d+%]$") then
+      in_preset = true
+    elseif line:match("^%[preset%.%d+%.options%]$") then
+      in_preset = false
+    elseif in_preset then
+      local name = line:match('^name="(.+)"$')
+      if name and presets[name] == nil then
+        presets[name] = name
+      end
+    end
+  end
+
+  if not next(presets) then return nil end
+  return presets
+end
+
+local function get_presets()
+  local dynamic = read_export_presets()
+  if dynamic then return dynamic end
   local config = require("godot.config").get()
-  local presets = config.runner.export.presets
+  return config.runner.export.presets or {}
+end
+
+local function pick_preset(callback)
+  local presets = get_presets()
   local items = vim.tbl_keys(presets)
   table.sort(items)
 
   local snack_ok, snacks = pcall(require, "snacks")
   if snack_ok and snacks.picker then
     snacks.picker.select(items, { prompt = "Export preset" }, function(item)
-      if item then callback(item, presets[item]) end
+      if item then callback(item) end
     end)
   else
     vim.ui.select(items, { prompt = "Export preset" }, function(item)
-      if item then callback(item, presets[item]) end
+      if item then callback(item) end
     end)
   end
 end
@@ -80,9 +111,9 @@ end
 function M.export_project(preset_name)
   local config = require("godot.config").get()
   local export_opts = config.runner.export
-  local preset_id = export_opts.presets[preset_name]
+  local presets = get_presets()
 
-  if not preset_id then
+  if not presets[preset_name] then
     vim.notify("[godot.nvim] Unknown export preset: " .. tostring(preset_name), vim.log.levels.ERROR)
     return
   end
@@ -96,7 +127,6 @@ function M.export_project(preset_name)
   end
 
   output_dir = output_dir .. "/" .. preset_name
-
   vim.fn.mkdir(output_dir, "p")
 
   local full_cmd = {
@@ -105,7 +135,7 @@ function M.export_project(preset_name)
     project_root(),
     "--headless",
     "--export-release",
-    preset_id,
+    preset_name,
     output_dir .. "/game",
   }
 
