@@ -109,12 +109,20 @@ function M.export_project(preset_name)
     output_dir .. "/game",
   }
 
+  local stderr_lines = {}
   vim.fn.jobstart(full_cmd, {
+    on_stderr = function(_, data)
+      for _, line in ipairs(data) do
+        if line ~= "" then table.insert(stderr_lines, line) end
+      end
+    end,
     on_exit = function(_, code)
       if code == 0 then
         vim.notify("[godot.nvim] Export " .. preset_name .. " completed -> " .. output_dir, vim.log.levels.INFO)
       else
-        vim.notify("[godot.nvim] Export " .. preset_name .. " failed with code " .. code, vim.log.levels.ERROR)
+        local msg = table.concat(stderr_lines, "\n")
+        if msg ~= "" then msg = "\n" .. msg end
+        vim.notify("[godot.nvim] Export " .. preset_name .. " failed with code " .. code .. msg, vim.log.levels.ERROR)
       end
     end,
   })
@@ -122,26 +130,16 @@ end
 
 function M.open_project()
   local config = require("godot.config").get()
-  local cmd = config.runner.command
-  local full_cmd = { cmd, "--path", project_root() }
+  local full_cmd = { config.runner.command, "--path", project_root() }
 
-  if config.runner.open_terminal then
-    local snack_ok, snacks = pcall(require, "snacks")
-    if snack_ok then
-      snacks.terminal(full_cmd, { position = "float" })
-    else
-      vim.fn.termopen(full_cmd, {})
-    end
-  else
-    vim.fn.jobstart(full_cmd, {
-      detach = true,
-      on_exit = function(_, code)
-        if code ~= 0 then
-          vim.notify("[godot.nvim] Godot exited with code " .. code, vim.log.levels.WARN)
-        end
-      end,
-    })
-  end
+  vim.fn.jobstart(full_cmd, {
+    detach = true,
+    on_exit = function(_, code)
+      if code ~= 0 then
+        vim.notify("[godot.nvim] Godot editor exited with code " .. code, vim.log.levels.WARN)
+      end
+    end,
+  })
 end
 
 function M.setup()
