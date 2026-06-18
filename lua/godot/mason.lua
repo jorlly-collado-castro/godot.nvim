@@ -28,7 +28,9 @@ function M.setup()
     return
   end
 
-  mason.setup {}
+  if not mason.has_setup then
+    mason.setup {}
+  end
 
   vim.defer_fn(function()
     install_missing(config.mason.packages)
