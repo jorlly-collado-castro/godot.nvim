@@ -79,6 +79,7 @@ local modules = {
   "godot.treesitter",
   "godot.debug",
   "godot.docs",
+  "godot.keymaps",
 }
 for _, name in ipairs(modules) do
   test_require(name)
@@ -146,6 +147,24 @@ assert_truthy(ok_docs, "docs.setup() should not throw: " .. tostring(err_docs))
 local snacks = require("godot.snacks")
 local ok_snacks, err_snacks = pcall(snacks.setup)
 assert_truthy(ok_snacks, "snacks.setup() should not throw: " .. tostring(err_snacks))
+
+-- ── Keymaps module tests ──────────────────────────────────
+
+local keymaps = require("godot.keymaps")
+
+-- setup() must not throw
+local ok_kp, err_kp = pcall(keymaps.setup)
+assert_truthy(ok_kp, "keymaps.setup() should not throw: " .. tostring(err_kp))
+
+-- Outside a Godot project, no keymaps should be registered
+-- (no project.godot in CWD during headless test)
+local map_lhs = vim.fn.maparg(config.get().keys.run, "n")
+assert_eq(map_lhs, "", "keymaps should not register outside Godot project")
+
+-- Config defaults for keys
+assert_eq(config.get().keys.run, "<leader>ga", "default key for run")
+assert_eq(config.get().keys.debug_start, "<leader>gt", "default key for debug_start")
+assert_eq(config.get().keys.docs, "<leader>gH", "default key for docs")
 
 print("[godot.nvim] all tests passed")
 os.exit(0)

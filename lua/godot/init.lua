@@ -12,6 +12,7 @@ function M.setup(opts)
   require("godot.treesitter").setup()
   require("godot.debug").setup()
   require("godot.docs").setup()
+  require("godot.keymaps").setup()
 end
 
 return M
