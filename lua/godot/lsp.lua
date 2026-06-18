@@ -11,7 +11,7 @@ function M.setup()
 
   local ok, lspconfig = pcall(require, "lspconfig")
   if not ok then
-    vim.notify("[godot.nvim] nvim-lspconfig not found – skipping LSP setup", vim.log.levels.WARN)
+    vim.notify("[godot.nvim] nvim-lspconfig not found – skipping LSP setup", vim.log.levels.DEBUG)
     return
   end
 

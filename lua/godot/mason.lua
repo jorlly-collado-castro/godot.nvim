@@ -6,7 +6,7 @@ function M.setup()
 
   local ok, mason = pcall(require, "mason")
   if not ok then
-    vim.notify("[godot.nvim] mason.nvim not found – skipping tool installation", vim.log.levels.WARN)
+    vim.notify("[godot.nvim] mason.nvim not found – skipping tool installation", vim.log.levels.DEBUG)
     return
   end
 

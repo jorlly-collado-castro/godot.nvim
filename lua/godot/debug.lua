@@ -34,7 +34,7 @@ function M.setup()
 
   local ok, dap = pcall(require, "dap")
   if not ok then
-    vim.notify("[godot.nvim] nvim-dap not found – skipping debug keymaps", vim.log.levels.WARN)
+    vim.notify("[godot.nvim] nvim-dap not found – skipping debug keymaps", vim.log.levels.DEBUG)
     return
   end
 

@@ -7,7 +7,7 @@ function M.setup()
 
   local ok, treesitter = pcall(require, "nvim-treesitter.configs")
   if not ok then
-    vim.notify("[godot.nvim] nvim-treesitter not found – skipping treesitter setup", vim.log.levels.WARN)
+    vim.notify("[godot.nvim] nvim-treesitter not found – skipping treesitter setup", vim.log.levels.DEBUG)
     return
   end
 
