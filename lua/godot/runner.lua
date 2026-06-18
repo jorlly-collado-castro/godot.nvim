@@ -162,9 +162,8 @@ function M.open_project()
   local config = require("godot.config").get()
   local root = project_root()
 
-  vim.fn.jobstart({ config.runner.command }, {
+  vim.fn.jobstart({ config.runner.command, "-e", "--path", root }, {
     detach = true,
-    cwd = root,
     on_exit = function(_, code)
       if code ~= 0 then
         vim.notify("[godot.nvim] Godot editor exited with code " .. code, vim.log.levels.WARN)

@@ -76,15 +76,11 @@ function M.setup()
 
   vim.api.nvim_create_user_command("GodotDebugStart", function()
     local _, port = parse_url(debug_opts.adapter.connect)
-    if not port_open("127.0.0.1", port) then
-      vim.notify(
-        "[godot.nvim] Godot not reachable on port " .. port
-          .. ". Start Godot with --remote-debug or press rd to auto-launch.",
-        vim.log.levels.ERROR
-      )
-      return
+    if port_open("127.0.0.1", port) then
+      dap.continue()
+    else
+      M.run_debug()
     end
-    dap.continue()
   end, { desc = "Start DAP debugging session" })
 
   vim.api.nvim_create_user_command("GodotDebugStop", function()
