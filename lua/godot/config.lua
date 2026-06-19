@@ -44,9 +44,11 @@ M.defaults = {
   },
   debug = {
     auto_setup = true,
+    debug_server_port = 6007,
     adapter = {
       type = "server",
-      connect = "tcp://127.0.0.1:6006",
+      host = "127.0.0.1",
+      port = 6006,
     },
     keymaps = {
       toggle_breakpoint = "<leader>db",

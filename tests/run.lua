@@ -167,9 +167,10 @@ assert_eq(config.get().keys.debug_start, "<leader>rt", "default key for debug_st
 assert_eq(config.get().keys.run_debug, "<leader>rd", "default key for run_debug")
 assert_eq(config.get().keys.docs, "<leader>rH", "default key for docs")
 
--- Adapter uses modern connect format
+-- Debug config defaults
 assert_eq(config.get().debug.adapter.type, "server", "adapter type")
-assert_eq(config.get().debug.adapter.connect, "tcp://127.0.0.1:6006", "adapter connect url")
+assert_eq(config.get().debug.adapter.port, 6006, "dap port")
+assert_eq(config.get().debug.debug_server_port, 6007, "debug server port")
 
 print("[godot.nvim] all tests passed")
 os.exit(0)
