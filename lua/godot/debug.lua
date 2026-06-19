@@ -12,7 +12,7 @@ end
 local function project_root()
   local proj = vim.fn.findfile("project.godot", vim.fn.getcwd() .. ";")
   if proj == "" then return vim.fn.getcwd() end
-  return vim.uv.fs_realpath(vim.fn.fnamemodify(proj, ":h")) or vim.fn.fnamemodify(proj, ":h")
+  return vim.fn.fnamemodify(proj, ":h")
 end
 
 local function start_editor_debug_server()
@@ -125,7 +125,8 @@ function M.start_debug_session()
   local port = config.debug.adapter.port
 
   if port_open(host, port) then
-    vim.notify("[godot.nvim] Editor already running on " .. host .. ":" .. port, vim.log.levels.INFO)
+    vim.notify("[godot.nvim] Editor is already running on " .. host .. ":" .. port
+      .. ". Use GodotRunDebug (rd) to launch the game and attach DAP.", vim.log.levels.INFO)
     return
   end
 
@@ -138,7 +139,7 @@ function M.start_debug_session()
       timer:stop()
       timer:close()
       vim.notify("[godot.nvim] Editor ready on " .. host .. ":" .. port
-        .. ". Run GodotRunDebug to start debugging.", vim.log.levels.INFO)
+        .. ". Run GodotRunDebug (rd) to start debugging.", vim.log.levels.INFO)
       return
     end
     elapsed = elapsed + 500
@@ -180,6 +181,7 @@ function M.run_debug()
   end
 
   if port_open(host, port) then
+    vim.notify("[godot.nvim] Editor is running, launching game...", vim.log.levels.INFO)
     launch_and_attach()
     return
   end
