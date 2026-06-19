@@ -50,7 +50,9 @@ function M.setup()
   if lsp_opts.gdscript ~= false then
     port_open("127.0.0.1", lsp_opts.gdscript_port or 6005, function(ok)
       if ok then
-        setup_gdscript(lsp_opts.gdscript or {})
+        vim.schedule(function()
+          setup_gdscript(lsp_opts.gdscript or {})
+        end)
       end
     end)
   end
